@@ -1,0 +1,204 @@
+{
+	"info": {
+		"_postman_id": "aa175632-602d-4363-b020-378884d20dff",
+		"name": "New Collection",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "26452550"
+	},
+	"item": [
+		{
+			"name": "TO Country",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "\r\n\r\n{\"postCode\": \"47500\"}\r\n//[{\"stateNm\":\"Selangor\",\"stateCd\":\"SEL\",\"city\":\"SUBANG JAYA\",\"postCode\":\"47500\"}]\r\n//\"stateNm\":\"Selangor\",\"stateCd\":\"SEL\",\"city\":\"SUBANG JAYA\",\"postCode\":\"47500\"}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://www-api.pos.com.my/api/getStateByPostcode",
+					"protocol": "https",
+					"host": [
+						"www-api",
+						"pos",
+						"com",
+						"my"
+					],
+					"path": [
+						"api",
+						"getStateByPostcode"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "POST Postcode with raw data ",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"postCode\": \"47500\"}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://www-api.pos.com.my/api/getStateByPostcode",
+					"protocol": "https",
+					"host": [
+						"www-api",
+						"pos",
+						"com",
+						"my"
+					],
+					"path": [
+						"api",
+						"getStateByPostcode"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Post Price with raw data",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"country\": \"Malaysia\", \"weight\": 1, \"postcodeFrom\": 35600, \"postcodeTo\": 47500}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://www-api.pos.com.my/api/price",
+					"protocol": "https",
+					"host": [
+						"www-api",
+						"pos",
+						"com",
+						"my"
+					],
+					"path": [
+						"api",
+						"price"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get TO Country",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// Get the raw response body as text\r",
+							"let responseBody = pm.response.text();\r",
+							"\r",
+							"// Regex to match each entry\r",
+							"let countryRegex = /{name:\"(.*?)\",alpha2Code:\"(.*?)\",alpha3Code:\"(.*?)\",numericCode:\"(.*?)\",callingCode:\"(.*?)\"}/g;\r",
+							"\r",
+							"let matches;\r",
+							"let countries = [];\r",
+							"\r",
+							"// Iterate over all matches\r",
+							"while ((matches = countryRegex.exec(responseBody)) !== null) {\r",
+							"    countries.push({\r",
+							"        name: matches[1],\r",
+							"        alpha2Code: matches[2],\r",
+							"        alpha3Code: matches[3],\r",
+							"        numericCode: matches[4],\r",
+							"        callingCode: matches[5]\r",
+							"    });\r",
+							"}\r",
+							"\r",
+							"// Log the extracted countries to the console\r",
+							"console.log(countries);\r",
+							"\r",
+							"// Save the extracted data to an environment variable (optional)\r",
+							"pm.environment.set(\"countries_list\", JSON.stringify(countries));\r",
+							"\r",
+							"// Ensure the extraction worked\r",
+							"pm.test(\"Countries extracted successfully\", function () {\r",
+							"    pm.expect(countries.length).to.be.above(0);\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"// // Get the raw response as text\r",
+							"// let responseBody = pm.response.text();\r",
+							"\r",
+							"// // Use regex to extract all country objects with the desired fields\r",
+							"// let countryRegex = /{name:\"(.*?)\",alpha2Code:\"(.*?)\",alpha3Code:\"(.*?)\",numericCode:\"(.*?)\",callingCode:\"(.*?)\"}/g;\r",
+							"// let matches;\r",
+							"// let countries = [];\r",
+							"\r",
+							"// // Loop through all matches and extract data\r",
+							"// while ((matches = countryRegex.exec(responseBody)) !== null) {\r",
+							"//     countries.push({\r",
+							"//         name: matches[1],\r",
+							"//         alpha2Code: matches[2],\r",
+							"//         alpha3Code: matches[3],\r",
+							"//         numericCode: matches[4],\r",
+							"//         callingCode: matches[5]\r",
+							"//     });\r",
+							"// }\r",
+							"\r",
+							"// // Log the extracted countries\r",
+							"// console.log(countries);\r",
+							"\r",
+							"// // Save the countries to an environment variable (optional)\r",
+							"// pm.environment.set(\"extracted_countries\", JSON.stringify(countries));\r",
+							"\r",
+							"// // Basic test to ensure extraction worked\r",
+							"// pm.test(\"Countries extracted successfully\", function () {\r",
+							"//     pm.expect(countries.length).to.be.above(0);\r",
+							"// });\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://www.pos.com.my/890.4dd5613c775cb75f.js",
+					"protocol": "https",
+					"host": [
+						"www",
+						"pos",
+						"com",
+						"my"
+					],
+					"path": [
+						"890.4dd5613c775cb75f.js"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
